@@ -9,6 +9,24 @@ export async function onRequestPost(context) {
       return Response.json({ error: "Faltan campos obligatorios" }, { status: 400 });
     }
 
+    // Verificar Turnstile
+    const turnstileToken = body["cf-turnstile-response"];
+    if (!turnstileToken) {
+      return Response.json({ error: "Verificación de seguridad requerida" }, { status: 400 });
+    }
+    const turnstileRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+      }),
+    });
+    const turnstileData = await turnstileRes.json();
+    if (!turnstileData.success) {
+      return Response.json({ error: "Verificación de seguridad fallida" }, { status: 400 });
+    }
+
     const apiKey = env.RESEND_API_KEY;
     if (!apiKey) {
       console.error("RESEND_API_KEY no está configurada");

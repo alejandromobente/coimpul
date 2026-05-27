@@ -1,6 +1,9 @@
 ---
 import Button from "@components/Button/Button.astro";
 
+// Reemplaza este valor con tu Turnstile Site Key (pública) de Cloudflare Dashboard → Turnstile
+const TURNSTILE_SITE_KEY = "TURNSTILE_SITE_KEY_AQUI";
+
 interface Props {
   locale?: "es" | "en";
 }
@@ -186,6 +189,8 @@ const t = {
         required></textarea>
     </div>
 
+    <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
+
     <Button variant="primary" type="submit" id="contact-submit">{t.submit}</Button>
   </form>
 
@@ -201,6 +206,8 @@ const t = {
     <p class="mt-1 text-sm text-red-700 dark:text-red-300">{t.errorBody}</p>
   </div>
 </section>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
