@@ -56,9 +56,9 @@ export const dataTranslations = {
  */
 export const textTranslations = {
   en: {
-    hero_text: "Everything you need for an amazing website.",
+    hero_text: "COIMPUL<br>Engineering & steel solutions",
     hero_description:
-      "A template for small business needs. Multiple pages and sections, blog, i18n, animations, CMS - all ready to go.",
+      "Ingenieros especialistas en construcciones industriales, estructuras metálicas y consultoría industrial. Cobertura nacional, innovación continua y soluciones a medida para cada cliente",
     back_to_all_posts: "Back to all posts",
     updated: "Updated",
   },
@@ -90,6 +90,7 @@ export const routeTranslations = {
     categoryKey3: "categories",
     blogKey: "blog",
     servicesKey: "services",
+    casosDeExitoKey: "casos-de-exito",
   },
   fr: {
     aboutKey: "a-propos",
@@ -98,6 +99,7 @@ export const routeTranslations = {
     categoryKey3: "categories/*",
     blogKey: "blog",
     servicesKey: "services",
+    casosDeExitoKey: "casos-de-exito",
   },
 } as const;
 

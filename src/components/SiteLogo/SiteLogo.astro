@@ -1,6 +1,5 @@
 ---
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 
 // utils
 import { getLocaleFromUrl } from "@js/localeUtils";
@@ -11,21 +10,28 @@ const currLocale = getLocaleFromUrl(Astro.url);
 const siteData = getTranslatedData("siteData", currLocale);
 
 // images
-import logo from "@images/atlas-logo.png";
+import logo from "@images/logo_coimpul.webp";
+import logoBlanco from "@images/logo_coimpul_blanco.png";
 ---
 
 <a
-  class="primary-focus text-base-600 dark:text-base-200 flex items-center gap-2 align-middle text-xl font-bold"
+  class="primary-focus flex items-center align-middle"
   href={getLocalizedRoute(currLocale, "/")}
 >
-  <!-- <Image
+  <!-- logo light mode -->
+  <Image
     src={logo}
-    alt="Atlas logo"
+    alt={siteData.name}
     loading="eager"
-    height={90}
-    class="h-10 w-auto"
-    aria-label="Atlas logo"
-  /> -->
-  <Icon name="atlas/logoipsum" class="text-primary-500 size-6" aria-hidden="true" />
-  <p class="">{siteData.name}</p>
+    height={56}
+    class="h-14 w-auto dark:hidden"
+  />
+  <!-- logo dark mode -->
+  <Image
+    src={logoBlanco}
+    alt={siteData.name}
+    loading="eager"
+    height={56}
+    class="h-14 w-auto hidden dark:block"
+  />
 </a>

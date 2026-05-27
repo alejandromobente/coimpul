@@ -49,7 +49,7 @@ const servicesCollection = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
-      image: image(),
+      image: image().optional(),
       // mappingKey allows you to match entries across languages for SEO purposes
       mappingKey: z.string().optional(),
       // services will be excluded from build if draft is "true"
@@ -70,9 +70,24 @@ const otherPagesCollection = defineCollection({
     }),
 });
 
+// casos de éxito
+const casosDeExitoCollection = defineCollection({
+  loader: glob({ pattern: "**/[^_]*{md,mdx}", base: "./src/data/casos-de-exito" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      image: image().optional(),
+      category: z.string(), // "industrial" | "comercial" | "infraestructuras" | "residencial"
+      client: z.string().optional(),
+      draft: z.boolean().optional(),
+    }),
+});
+
 export const collections = {
   blog: blogCollection,
   authors: authorsCollection,
   services: servicesCollection,
   otherPages: otherPagesCollection,
+  casosDeExito: casosDeExitoCollection,
 };

@@ -9,7 +9,11 @@ import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
 
 // components
+import Button from "@components/Button/Button.astro";
 import CtaCardSplit from "@components/Cta/CtaCardSplit.astro";
+
+// default hero image
+import defaultHeroImage from "@images/house.jpg";
 
 interface Props {
   title: string;
@@ -18,37 +22,85 @@ interface Props {
 }
 
 const { title, description, image = undefined } = Astro.props as Props;
+const heroImage = image ?? defaultHeroImage;
 ---
 
 <BaseLayout title={title} description={description} image={image}>
-  <!-- service heading -->
-  <section class="site-container mt-16 flex w-full flex-col items-center overflow-x-clip">
-    <div
-      class="w-full bg-[url('/assets/pattern-light.svg')] bg-center bg-no-repeat py-20 text-center md:py-32 dark:bg-[url('/assets/pattern-dark.svg')]"
-    >
-      <h1 class="h1">{title}</h1>
-    </div>
 
-    <!-- service main image -->
-    {
-      image && (
-        <div class="-mt-12 max-w-[800px] overflow-hidden px-4 md:-mt-20">
-          <Image
-            src={image}
-            alt=""
-            width={1600}
-            quality="high"
-            class="max-h-[45vh] rounded-md object-cover"
-            loading="eager"
-          />
+  <!-- hero side image -->
+  <section
+    id="service-hero"
+    class="mt-20 overflow-clip bg-[url('/assets/pattern-light-big.svg')] bg-center bg-no-repeat dark:bg-[url('/assets/pattern-dark-big.svg')]"
+  >
+    <div class="site-container mx-auto px-4 pt-10 pb-10 md:pt-14 md:pb-14">
+      <div class="-mx-4 flex flex-wrap items-center xl:items-center">
+
+        <!-- texto izquierda -->
+        <div class="mb-10 w-full px-4 md:mb-0 md:w-1/2">
+          <div data-mos="fade-right" data-mos-anchor="#service-hero">
+            <span
+              class="bg-primary-500 mb-4 inline-flex items-center rounded-full px-2 py-px text-xs leading-5 text-white uppercase"
+            >
+              Servicios
+            </span>
+            <h1
+              class="text-base-900 dark:text-base-100 mb-6 text-3xl leading-tight font-bold tracking-tight text-pretty lg:text-5xl lg:leading-tight"
+            >
+              {title}
+            </h1>
+          </div>
+          <p
+            class="description mb-8 text-lg text-pretty lg:text-xl"
+            data-mos="fade-right"
+            data-mos-delay=".1"
+            data-mos-anchor="#service-hero"
+          >
+            {description}
+          </p>
+          <div
+            class="mt-6 flex flex-wrap gap-4"
+            data-mos="fade-right"
+            data-mos-delay=".2"
+            data-mos-anchor="#service-hero"
+          >
+            <Button variant="primary" href="/contact">
+              Solicitar presupuesto
+            </Button>
+          </div>
         </div>
-      )
-    }
+
+        <!-- imagen derecha -->
+        <div class="w-full px-4 md:w-1/2">
+          <div
+            class="relative mx-auto max-w-max md:mr-0"
+            data-mos="fade-left"
+            data-mos-anchor="#service-hero"
+          >
+            <div class="overflow-hidden rounded-2xl">
+              <Image
+                src={heroImage}
+                class="h-auto min-w-full max-h-[420px] object-cover"
+                alt={title}
+                loading="eager"
+                width={600}
+                densities={[1.5, 2]}
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </section>
 
+  <!-- separador -->
+  <div class="site-container flex justify-center py-2">
+    <div class="h-px w-full" style="background: linear-gradient(to right, transparent, #2fb2a8, transparent);"></div>
+  </div>
+
   <!-- service details -->
-  <section class="my-20">
-    <div class="markdown-content mx-auto max-w-[800px] px-4">
+  <section class="my-16">
+    <div class="markdown-content site-container">
       <slot />
     </div>
   </section>

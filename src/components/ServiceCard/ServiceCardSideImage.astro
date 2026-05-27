@@ -5,7 +5,6 @@
  */
 
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 
 // components
 import Button from "@components/Button/Button.astro";
@@ -46,24 +45,6 @@ const currLocale = getLocaleFromUrl(Astro.url);
 
   <!-- image -->
   <div class="relative mx-auto max-w-4xl">
-    <Icon
-      is:inline
-      name="atlas/circle3"
-      class:list={[
-        "absolute -top-4 -left-8 z-10 size-20 md:-top-8 md:size-28",
-        imageSide === "right" ? "text-accent-1" : "text-accent-4 rotate-90",
-      ]}
-      aria-hidden="true"
-    />
-    <Icon
-      is:inline
-      name="atlas/dots3"
-      class:list={[
-        "text-accent-2 absolute -right-7 -bottom-4 z-10 h-auto w-20 md:-bottom-8 md:w-28",
-        imageSide === "right" ? "text-accent-2" : "text-accent-3",
-      ]}
-      aria-hidden="true"
-    />
     <Image
       class="relative rounded-xl border border-transparent object-cover"
       src={image}
