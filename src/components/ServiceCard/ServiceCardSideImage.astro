@@ -25,6 +25,7 @@ interface Props {
 const { image, title, href, idx, details, imageSide } = Astro.props as Props;
 
 const currLocale = getLocaleFromUrl(Astro.url);
+const learnMoreLabel = currLocale === "en" ? "Learn more" : "Más información";
 ---
 
 <div
@@ -38,7 +39,7 @@ const currLocale = getLocaleFromUrl(Astro.url);
     <p class="description mt-6">{details}</p>
     <div class="z-20 mt-8 flex">
       <Button variant="primary" href={getLocalizedRoute(currLocale, href)} arrow="none">
-        Learn more <span class="sr-only">about {title}</span>
+        {learnMoreLabel} <span class="sr-only">about {title}</span>
       </Button>
     </div>
   </div>

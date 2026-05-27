@@ -80,6 +80,8 @@ const casosDeExitoCollection = defineCollection({
       image: image().optional(),
       category: z.string(), // "industrial" | "comercial" | "infraestructuras" | "residencial"
       client: z.string().optional(),
+      // mappingKey links ES and EN versions of the same case study
+      mappingKey: z.string().optional(),
       draft: z.boolean().optional(),
     }),
 });

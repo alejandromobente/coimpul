@@ -7,6 +7,14 @@ import { Icon } from "astro-icon/components";
 
 // components
 import Button from "@components/Button/Button.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getLocalizedRoute } from "@js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+const contactHref = getLocalizedRoute(currLocale, "/contact");
 ---
 
 <section class="py-10">
@@ -30,20 +38,25 @@ import Button from "@components/Button/Button.astro";
 
       <div class="relative z-20 -m-3 flex flex-wrap items-center">
         <div class="w-full p-3 md:w-1/2">
-          <h2 class="mb-6 text-4xl font-bold tracking-tighter text-white">
-            What are you waiting for? Get started today.
-          </h2>
-          <p class="font-semibold text-white">Level up with this theme.</p>
+          {isEn ? (
+            <>
+              <h2 class="mb-6 text-4xl font-bold tracking-tighter text-white">
+                Have a similar project? Let's talk.
+              </h2>
+              <p class="font-semibold text-white">Nationwide coverage · CE-certified steel structures.</p>
+            </>
+          ) : (
+            <>
+              <h2 class="mb-6 text-4xl font-bold tracking-tighter text-white">
+                ¿Tienes un proyecto similar? Hablemos.
+              </h2>
+              <p class="font-semibold text-white">Cobertura nacional · Estructuras metálicas con marcado CE.</p>
+            </>
+          )}
         </div>
         <div class="flex w-full p-3 md:w-1/2 md:justify-end">
-          <Button
-            variant="outline"
-            href="https://cosmicthemes.com/themes/atlas/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="shadow-none"
-          >
-            Contacto
+          <Button variant="outline" href={contactHref} class="shadow-none">
+            {isEn ? "Contact us" : "Contacto"}
           </Button>
         </div>
       </div>

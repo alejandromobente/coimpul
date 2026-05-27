@@ -1,0 +1,84 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import ExternalLink from "@components/MarkdownComponents/ExternalLink.astro";
+import CtaCardSplit from "@components/Cta/CtaCardSplit.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+const categoryLabels: Record<string, string> = {
+  industrial: "Industrial",
+  comercial: "Commercial",
+  infraestructuras: "Infrastructure",
+  residencial: "Residential",
+};
+
+export async function getStaticPaths() {
+  const casos = await getCollection(
+    "casosDeExito",
+    ({ id, data }) => id.startsWith("en/") && data.draft !== true,
+  );
+  return casos.map((caso) => ({
+    params: { slug: caso.id.replace("en/", "") },
+    props: caso,
+  }));
+}
+
+const caso = Astro.props as CollectionEntry<"casosDeExito">;
+const { Content } = await render(caso);
+const { title, description, image, category, client } = caso.data;
+---
+
+<BaseLayout title={`${title} | COIMPUL`} description={description}>
+  <section class="site-container mt-16 flex w-full flex-col items-center overflow-x-clip">
+    <div
+      class="w-full bg-[url('/assets/pattern-light.svg')] bg-center bg-no-repeat py-20 text-center md:py-28 dark:bg-[url('/assets/pattern-dark.svg')]"
+    >
+      <Badge>{categoryLabels[category] ?? category}</Badge>
+      <h1 class="h1 mt-3">{title}</h1>
+      {
+        client && (
+          <p class="description mt-4 text-base font-medium">
+            Client: <span class="text-primary-500">{client}</span>
+          </p>
+        )
+      }
+    </div>
+
+    {
+      image && (
+        <div class="-mt-12 max-w-[900px] w-full overflow-hidden px-4 md:-mt-20">
+          <Image
+            src={image}
+            alt={title}
+            width={1800}
+            quality="high"
+            class="max-h-[50vh] w-full rounded-xl object-cover shadow-xl"
+            loading="eager"
+          />
+        </div>
+      )
+    }
+  </section>
+
+  <section class="my-20">
+    <div class="markdown-content mx-auto max-w-[800px] px-4">
+      <Content components={{ a: ExternalLink }} />
+    </div>
+  </section>
+
+  <div class="site-container mb-16 text-center">
+    <a
+      href="/en/success-stories"
+      class="text-primary-500 hover:text-primary-600 font-medium transition-colors"
+    >
+      ← View all success stories
+    </a>
+  </div>
+
+  <CtaCardSplit />
+</BaseLayout>

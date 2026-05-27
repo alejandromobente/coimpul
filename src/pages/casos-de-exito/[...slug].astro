@@ -18,9 +18,12 @@ const categoryLabels: Record<string, string> = {
 };
 
 export async function getStaticPaths() {
-  const casos = await getCollection("casosDeExito", ({ data }) => data.draft !== true);
+  const casos = await getCollection(
+    "casosDeExito",
+    ({ id, data }) => id.startsWith("es/") && data.draft !== true,
+  );
   return casos.map((caso) => ({
-    params: { slug: caso.id },
+    params: { slug: caso.id.replace("es/", "") },
     props: caso,
   }));
 }

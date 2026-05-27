@@ -11,6 +11,9 @@ import { Icon } from "astro-icon/components";
 // components
 import Badge from "@components/Badge/Badge.astro";
 
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+
 // images
 import image1 from "@assets/images/entry-way.jpg";
 import image2 from "@assets/images/house.jpg";
@@ -23,6 +26,9 @@ import image7 from "@assets/images/paint-swatches.jpg";
 interface MarqueeImages {
   images: ImageMetadata[]; // imported images
 }
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
 
 // change these images to whatever you want!
 const marqueeTop: MarqueeImages = {
@@ -44,11 +50,25 @@ const marqueeBottom: MarqueeImages = {
 >
   <div class="site-container flex justify-center">
     <div class="mx-auto mb-16 text-center md:max-w-4xl" data-mos="fade-up">
-      <Badge>Gallery</Badge>
-      <h2 class="h2">Some of our work</h2>
-      <p class="description mt-4 text-lg text-pretty md:text-xl">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-      </p>
+      {isEn ? (
+        <>
+          <Badge>Gallery</Badge>
+          <h2 class="h2">Some of our work</h2>
+          <p class="description mt-4 text-lg text-pretty md:text-xl">
+            A visual showcase of real projects: steel structures, industrial buildings,
+            turnkey construction and much more.
+          </p>
+        </>
+      ) : (
+        <>
+          <Badge>Galería</Badge>
+          <h2 class="h2">Algunos de nuestros trabajos</h2>
+          <p class="description mt-4 text-lg text-pretty md:text-xl">
+            Una muestra visual de proyectos reales: estructuras metálicas, naves industriales,
+            construcciones llave en mano y mucho más.
+          </p>
+        </>
+      )}
     </div>
   </div>
 

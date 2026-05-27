@@ -14,14 +14,20 @@ import { Icon } from "astro-icon/components";
 import FeatureCard from "@components/FeatureCard/FeatureCardSmall.astro";
 import Badge from "@components/Badge/Badge.astro";
 
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+
 interface FeatureData {
   icon: string;
   title: string;
   text: string;
 }
 
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+
 // data
-const featureData: FeatureData[] = [
+const featureDataEs: FeatureData[] = [
   {
     icon: "tabler/user",
     title: "Equipo",
@@ -53,6 +59,41 @@ const featureData: FeatureData[] = [
     text: `En la toma de decisiones a la hora de diseñar los proyectos, nuestra balanza se decanta en el mínimo impacto ambiental.`,
   },
 ];
+
+const featureDataEn: FeatureData[] = [
+  {
+    icon: "tabler/user",
+    title: "Team",
+    text: `We are a team of highly qualified professionals who carry out their work with quality and commitment as their guiding philosophy.`,
+  },
+  {
+    icon: "tabler/circle-check",
+    title: "Quality",
+    text: `As a prerequisite in every job, we hold CE marking for steel structures in accordance with EN-1090.`,
+  },
+  {
+    icon: "tabler/bulb",
+    title: "Innovation",
+    text: `Digitally connected processes, from the BIM model through to workshop execution.`,
+  },
+  {
+    icon: "tabler/diamonds",
+    title: "Value",
+    text: `Thanks to our philosophy, we are able to compete with the best prices on the market.`,
+  },
+  {
+    icon: "tabler/alert-triangle",
+    title: "Health & Safety",
+    text: `An essential and key part of the daily work in each and every one of our activities.`,
+  },
+  {
+    icon: "tabler/heart",
+    title: "Sustainability",
+    text: `When making decisions at the design stage of projects, we always favour the lowest possible environmental impact.`,
+  },
+];
+
+const featureData = isEn ? featureDataEn : featureDataEs;
 ---
 
 <section
@@ -61,12 +102,25 @@ const featureData: FeatureData[] = [
 >
   <div class="site-container relative">
     <div class="mx-auto mb-16 text-center md:max-w-4xl" data-mos="fade-up">
-      <Badge>Por qué Coimpul</Badge>
-      <h2 class="h2 mb-4">Los valores que nos definen</h2>
-      <p class="description text-lg text-pretty md:text-xl">
-        Trabajamos con un compromiso firme hacia la calidad, la innovación y las personas,
-        en cada proyecto que abordamos.
-      </p>
+      {isEn ? (
+        <>
+          <Badge>Why Coimpul</Badge>
+          <h2 class="h2 mb-4">The values that define us</h2>
+          <p class="description text-lg text-pretty md:text-xl">
+            We work with a firm commitment to quality, innovation and people,
+            in every project we take on.
+          </p>
+        </>
+      ) : (
+        <>
+          <Badge>Por qué Coimpul</Badge>
+          <h2 class="h2 mb-4">Los valores que nos definen</h2>
+          <p class="description text-lg text-pretty md:text-xl">
+            Trabajamos con un compromiso firme hacia la calidad, la innovación y las personas,
+            en cada proyecto que abordamos.
+          </p>
+        </>
+      )}
     </div>
     <div id="trigger-small-cards" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {

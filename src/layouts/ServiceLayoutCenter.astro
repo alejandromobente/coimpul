@@ -12,6 +12,10 @@ import BaseLayout from "./BaseLayout.astro";
 import Button from "@components/Button/Button.astro";
 import CtaCardSplit from "@components/Cta/CtaCardSplit.astro";
 
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getLocalizedRoute } from "@js/translationUtils";
+
 // default hero image
 import defaultHeroImage from "@images/house.jpg";
 
@@ -23,6 +27,12 @@ interface Props {
 
 const { title, description, image = undefined } = Astro.props as Props;
 const heroImage = image ?? defaultHeroImage;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+const badgeText = isEn ? "Services" : "Servicios";
+const ctaText = isEn ? "Request a quote" : "Solicitar presupuesto";
+const contactHref = getLocalizedRoute(currLocale, "/contact");
 ---
 
 <BaseLayout title={title} description={description} image={image}>
@@ -41,7 +51,7 @@ const heroImage = image ?? defaultHeroImage;
             <span
               class="bg-primary-500 mb-4 inline-flex items-center rounded-full px-2 py-px text-xs leading-5 text-white uppercase"
             >
-              Servicios
+              {badgeText}
             </span>
             <h1
               class="text-base-900 dark:text-base-100 mb-6 text-3xl leading-tight font-bold tracking-tight text-pretty lg:text-5xl lg:leading-tight"
@@ -63,8 +73,8 @@ const heroImage = image ?? defaultHeroImage;
             data-mos-delay=".2"
             data-mos-anchor="#service-hero"
           >
-            <Button variant="primary" href="/contact">
-              Solicitar presupuesto
+            <Button variant="primary" href={contactHref}>
+              {ctaText}
             </Button>
           </div>
         </div>

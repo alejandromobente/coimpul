@@ -1,0 +1,175 @@
+---
+/**
+ * * Unified locale-aware full page for Casos de Éxito / Success Stories index.
+ * Used by both:
+ *   - src/pages/casos-de-exito/index.astro  (ES)
+ *   - src/pages/en/success-stories/index.astro  (EN)
+ */
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getLocalizedRoute } from "@js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+
+// Fetch only entries for the current locale
+const allCasos = await getCollection(
+  "casosDeExito",
+  ({ id, data }) => id.startsWith(`${currLocale}/`) && data.draft !== true,
+);
+
+const casos = allCasos.sort((a, b) => a.data.title.localeCompare(b.data.title));
+const categories = [...new Set(casos.map((c) => c.data.category))].sort();
+
+const getSlug = (id: string) => id.replace(`${currLocale}/`, "");
+const getCasoHref = (id: string) =>
+  getLocalizedRoute(currLocale, `/casos-de-exito/${getSlug(id)}`);
+
+const categoryLabels: Record<string, string> = isEn
+  ? {
+      industrial: "Industrial",
+      comercial: "Commercial",
+      infraestructuras: "Infrastructure",
+      residencial: "Residential",
+    }
+  : {
+      industrial: "Industrial",
+      comercial: "Comercial",
+      infraestructuras: "Infraestructuras",
+      residencial: "Residencial",
+    };
+
+const categoryGradients: Record<string, string> = {
+  industrial: "from-orange-900 to-orange-700",
+  comercial: "from-slate-800 to-slate-600",
+  infraestructuras: "from-stone-800 to-stone-600",
+  residencial: "from-zinc-800 to-zinc-600",
+};
+
+const meta = {
+  title: isEn ? "Success Stories | COIMPUL S.L." : "Casos de Éxito | COIMPUL S.L.",
+  description: isEn
+    ? "Real projects that demonstrate our expertise in steel structures, industrial construction and engineering consultancy."
+    : "Proyectos reales que demuestran nuestra experiencia en estructuras metálicas, construcción industrial y consultoría de ingeniería.",
+};
+---
+
+<BaseLayout title={meta.title} description={meta.description}>
+
+  <!-- Header -->
+  <section class="site-container mt-28 mb-12 text-center">
+    <div class="mx-auto max-w-2xl" data-mos="fade-up">
+      <Badge>{isEn ? "Projects" : "Proyectos"}</Badge>
+      <h1 class="h1 mt-2 mb-4">{isEn ? "Success Stories" : "Casos de Éxito"}</h1>
+      <p class="description text-lg text-pretty">
+        {
+          isEn
+            ? "Results, facts. A selection of real projects that illustrate what we do and how we do it."
+            : "Resultados, hechos. Algunos proyectos reales que pueden servir de ejemplo para entender mejor lo que hacemos."
+        }
+      </p>
+    </div>
+  </section>
+
+  <!-- Filtros -->
+  <section class="site-container mb-10">
+    <div class="flex flex-wrap justify-center gap-3" id="filter-buttons">
+      <button
+        data-filter="todos"
+        class="filter-btn filter-btn--active rounded-full border border-primary-500 bg-primary-500 px-5 py-2 text-sm font-medium text-white transition-all"
+      >
+        {isEn ? "All" : "Todos"}
+      </button>
+      {
+        categories.map((cat) => (
+          <button
+            data-filter={cat}
+            class="filter-btn rounded-full border border-base-300 bg-white px-5 py-2 text-sm font-medium text-base-600 transition-all hover:border-primary-500 hover:text-primary-500 dark:border-base-700 dark:bg-base-900 dark:text-base-300"
+          >
+            {categoryLabels[cat] ?? cat}
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Grid de casos -->
+  <section class="site-container pb-24">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="casos-grid">
+      {
+        casos.map((caso) => (
+          <a
+            href={getCasoHref(caso.id)}
+            data-category={caso.data.category}
+            class="caso-card group relative overflow-hidden rounded-xl"
+          >
+            <div class="aspect-[4/3] w-full overflow-hidden">
+              {caso.data.image ? (
+                <Image
+                  src={caso.data.image}
+                  alt={caso.data.title}
+                  width={800}
+                  height={600}
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div
+                  class={`h-full w-full bg-gradient-to-br ${categoryGradients[caso.data.category] ?? "from-base-800 to-base-600"} transition-transform duration-500 group-hover:scale-105`}
+                />
+              )}
+            </div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+            <div class="absolute bottom-0 left-0 right-0 p-5">
+              <span class="mb-2 inline-block rounded-full bg-primary-500/90 px-3 py-0.5 text-xs font-semibold text-white uppercase tracking-wide">
+                {categoryLabels[caso.data.category] ?? caso.data.category}
+              </span>
+              <h2 class="text-lg font-bold leading-tight text-white">{caso.data.title}</h2>
+              <p class="mt-1 line-clamp-2 text-sm text-white/75">{caso.data.description}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  function initFilters() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const cards = document.querySelectorAll<HTMLElement>(".caso-card");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.dataset.filter!;
+
+        buttons.forEach((b) => {
+          b.classList.remove("filter-btn--active", "bg-primary-500", "border-primary-500", "text-white");
+          b.classList.add("border-base-300", "bg-white", "text-base-600", "dark:border-base-700", "dark:bg-base-900", "dark:text-base-300");
+        });
+
+        btn.classList.add("filter-btn--active", "bg-primary-500", "border-primary-500", "text-white");
+        btn.classList.remove("border-base-300", "bg-white", "text-base-600", "dark:border-base-700", "dark:bg-base-900", "dark:text-base-300");
+
+        cards.forEach((card) => {
+          card.style.display =
+            filter === "todos" || card.dataset.category === filter ? "" : "none";
+        });
+      });
+    });
+  }
+
+  initFilters();
+  document.addEventListener("astro:after-swap", initFilters);
+</script>

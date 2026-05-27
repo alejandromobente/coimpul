@@ -9,10 +9,14 @@ import Button from "@components/Button/Button.astro";
 
 // utils
 import { getLocaleFromUrl } from "@js/localeUtils";
-import { useTranslations } from "@js/translationUtils";
+import { useTranslations, getLocalizedRoute } from "@js/translationUtils";
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
+const isEn = currLocale === "en";
+
+const contactHref = getLocalizedRoute(currLocale, "/contact");
+const casosHref = getLocalizedRoute(currLocale, "/casos-de-exito");
 ---
 
 <section
@@ -25,7 +29,7 @@ const t = useTranslations(currLocale);
         <span
           class="bg-primary-500 mb-4 inline-flex items-center rounded-full px-2 py-px text-xs leading-5 text-white uppercase"
         >
-          Construcciones Industriales
+          {isEn ? "Industrial Construction" : "Construcciones Industriales"}
         </span>
 
         <h1
@@ -44,23 +48,23 @@ const t = useTranslations(currLocale);
       <div class="flex flex-wrap justify-center gap-4">
         <Button
           variant="primary"
-          href="/contact"
+          href={contactHref}
           data-mos="fade-right"
           data-mos-delay=".2"
           data-mos-anchor="#hero-center"
         >
-          Contacto
+          {isEn ? "Contact us" : "Contacto"}
         </Button>
         <Button
           variant="outline"
-          href="/casos-de-exito"
+          href={casosHref}
           class="flex gap-1"
           data-mos="fade-right"
           data-mos-delay=".2"
           data-mos-anchor="#hero-center"
         >
           <Icon name="tabler/circle-check" class="h-5 w-5" aria-hidden="true" />
-          <span>Casos de éxito</span>
+          <span>{isEn ? "Success stories" : "Casos de éxito"}</span>
         </Button>
       </div>
     </div>

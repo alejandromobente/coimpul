@@ -1,0 +1,101 @@
+---
+/**
+ * * Unified locale-aware full page for Contact.
+ * Used by both:
+ *   - src/pages/contact.astro  (ES)
+ *   - src/pages/en/contact.astro  (EN)
+ */
+import { Icon } from "astro-icon/components";
+
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import ContactForm from "@components/Forms/ContactForm.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+const siteData = getTranslatedData("siteData", currLocale);
+---
+
+<BaseLayout
+  title={isEn ? "Contact | COIMPUL S.L." : "Contacto | COIMPUL S.L."}
+  description={isEn
+    ? "Get in touch with us. We'll be happy to study your project."
+    : "Ponte en contacto con nosotros. Estaremos encantados de estudiar tu proyecto."}
+>
+  <div class="site-container mx-auto mt-16 overflow-x-clip">
+    <div
+      class="w-full bg-[url('/assets/pattern-light.svg')] bg-center bg-no-repeat py-20 text-center md:py-32 dark:bg-[url('/assets/pattern-dark.svg')]"
+    >
+      <h1 class="h1">{isEn ? "Contact Us" : "Contacta con nosotros"}</h1>
+      <p class="description mx-auto mt-6 max-w-2xl">
+        {
+          isEn
+            ? "Fill in the form and we'll get back to you to discuss your project. We look forward to hearing from you!"
+            : "Rellena el formulario y nos pondremos en contacto contigo para estudiar tu proyecto. ¡Estaremos encantados de ayudarte!"
+        }
+      </p>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      <!-- Formulario de contacto -->
+      <div class="mb-12 lg:order-2">
+        <ContactForm />
+      </div>
+
+      <!-- Datos de contacto -->
+      <div class="mb-auto grid gap-x-6 gap-y-12 lg:grid-cols-2">
+        <!-- Email -->
+        <div class="flex flex-col items-center gap-3 lg:items-start">
+          <div
+            class="bg-primary-500 inline-flex size-12 items-center justify-center overflow-hidden rounded-full"
+          >
+            <Icon name="tabler/mail" class="size-6 text-white" />
+          </div>
+          <h3 class="h3">Email</h3>
+          <a
+            href={`mailto:${siteData.contact.email}`}
+            class="description hover:text-base-600 transition"
+          >
+            {siteData.contact.email}
+          </a>
+        </div>
+
+        <!-- Teléfono / Phone -->
+        <div class="flex flex-col items-center gap-3 lg:items-start">
+          <div
+            class="bg-primary-500 inline-flex size-12 items-center justify-center overflow-hidden rounded-full"
+          >
+            <Icon name="tabler/phone" class="size-6 text-white" />
+          </div>
+          <h3 class="h3">{isEn ? "Phone" : "Teléfono"}</h3>
+          <a
+            href={`tel:${siteData.contact.phone}`}
+            class="description hover:text-base-600 transition"
+          >
+            {siteData.contact.phone}
+          </a>
+        </div>
+
+        <!-- Dirección / Office -->
+        <div class="flex flex-col items-center gap-3 lg:items-start">
+          <div
+            class="bg-primary-500 inline-flex size-12 items-center justify-center overflow-hidden rounded-full"
+          >
+            <Icon name="tabler/map-pin" class="size-6 text-white" />
+          </div>
+          <h3 class="h3">{isEn ? "Office" : "Oficina"}</h3>
+          <div class="description flex flex-col items-center lg:items-start">
+            <p>{siteData.contact.address1}</p>
+            <p>{siteData.contact.address2}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

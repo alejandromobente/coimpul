@@ -84,7 +84,7 @@ const authorsData = await getEntries(authors);
         href={getLocalizedRoute(currLocale, `/blog/${post.id}/`)}
         class="text-primary-500 hover:text-primary-600 flex items-center gap-1 font-semibold transition-colors"
       >
-        Read Post
+        {currLocale === "en" ? "Read post" : "Leer artículo"}
         <Icon name="tabler/arrow-narrow-right" class="size-4" />
       </a>
     </div>

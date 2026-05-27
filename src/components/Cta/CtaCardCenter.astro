@@ -8,9 +8,17 @@ import { Icon } from "astro-icon/components";
 // components
 import Button from "@components/Button/Button.astro";
 
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getLocalizedRoute } from "@js/translationUtils";
+
 // svgs
 import Dots3 from "@src/icons/atlas/dots3.svg";
 import WaveBgBasic from "@src/icons/atlas/wave-bg-basic.svg";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+const contactHref = getLocalizedRoute(currLocale, "/contact");
 ---
 
 <section class="py-10">
@@ -38,19 +46,25 @@ import WaveBgBasic from "@src/icons/atlas/wave-bg-basic.svg";
       <div
         class="relative z-20 -m-3 mx-auto flex max-w-lg flex-col flex-wrap items-center gap-4 text-center"
       >
-        <h2 class="mb-6 text-4xl/normal font-bold text-white">
-          What are you waiting for? Get started today.
-        </h2>
-        <!-- <p class="font-semibold text-base-100">Level up with this theme.</p> -->
-        <Button
-          variant="primary"
-          href="https://cosmicthemes.com/themes/atlas/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="shadow-none"
-        >
-          Contacto
-        </Button>
+        {isEn ? (
+          <>
+            <h2 class="mb-6 text-4xl/normal font-bold text-white">
+              Have a project in mind? Let's talk.
+            </h2>
+            <Button variant="primary" href={contactHref} class="shadow-none">
+              Contact us
+            </Button>
+          </>
+        ) : (
+          <>
+            <h2 class="mb-6 text-4xl/normal font-bold text-white">
+              ¿Tienes un proyecto en mente? Hablemos.
+            </h2>
+            <Button variant="primary" href={contactHref} class="shadow-none">
+              Contacto
+            </Button>
+          </>
+        )}
       </div>
     </div>
   </div>

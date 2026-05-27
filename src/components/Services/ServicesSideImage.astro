@@ -9,6 +9,9 @@ import { Icon } from "astro-icon/components";
 import ServiceCard from "@components/ServiceCard/ServiceCardSideImage.astro";
 import Badge from "@components/Badge/Badge.astro";
 
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+
 // images
 import image1 from "@images/house.jpg";
 import image2 from "@images/entry-way.jpg";
@@ -23,15 +26,18 @@ interface ServiceItem {
   href: string; // link to learn more
 }
 
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+
 // data
-const serviceData: ServiceItem[] = [
+const serviceDataEs: ServiceItem[] = [
   {
     image: image1,
     title: "Estructuras Metálicas",
     details: `Diseño, fabricación e instalación de estructuras metálicas para edificios industriales,
     comerciales y civiles. Trabajamos con los más altos estándares de calidad, garantizando
     precisión técnica, durabilidad y cumplimiento normativo en cada proyecto.`,
-    href: "/services/estructuras-metalicas/",
+    href: "/servicios/estructuras-metalicas/",
   },
   {
     image: image2,
@@ -39,7 +45,7 @@ const serviceData: ServiceItem[] = [
     details: `Gestionamos el proyecto completo, desde la ingeniería y el diseño hasta la entrega
     final de la instalación. Ofrecemos soluciones integrales adaptadas a las necesidades de cada
     cliente, con un único interlocutor y total tranquilidad durante todo el proceso.`,
-    href: "/services/construccion-llave-en-mano/",
+    href: "/servicios/construccion-llave-en-mano/",
   },
   {
     image: image3,
@@ -47,7 +53,7 @@ const serviceData: ServiceItem[] = [
     details: `Servicios integrales de mantenimiento industrial, tanto preventivo como correctivo,
     de instalaciones, maquinaria y estructuras metálicas. Minimizamos paradas de producción y
     garantizamos la operatividad continua de sus instalaciones.`,
-    href: "/services/area-industrial-y-mantenimiento/",
+    href: "/servicios/area-industrial-y-mantenimiento/",
   },
   {
     image: image4,
@@ -55,7 +61,7 @@ const serviceData: ServiceItem[] = [
     details: `Fabricación a medida de elementos metálicos: barandillas, escaleras, puertas,
     cerramientos y cualquier solución en metal. Combinamos artesanía de precisión con acabados
     de calidad para dar respuesta a las exigencias más específicas de cada proyecto.`,
-    href: "/services/metalisteria/",
+    href: "/servicios/metalisteria/",
   },
   {
     image: image5,
@@ -63,20 +69,78 @@ const serviceData: ServiceItem[] = [
     details: `Asesoramiento técnico especializado en ingeniería industrial: estudios estructurales,
     inspecciones técnicas, dirección de obra y consultoría de proyectos. Aportamos rigor
     técnico y experiencia para optimizar cada fase de su proyecto industrial.`,
-    href: "/services/ingenieria-y-consultoria/",
+    href: "/servicios/ingenieria-y-consultoria/",
   },
 ];
+
+const serviceDataEn: ServiceItem[] = [
+  {
+    image: image1,
+    title: "Steel Structures",
+    details: `Design, fabrication and installation of steel structures for industrial, commercial and
+    civil buildings. We work to the highest quality standards, ensuring technical precision,
+    durability and regulatory compliance in every project.`,
+    href: "/servicios/estructuras-metalicas/",
+  },
+  {
+    image: image2,
+    title: "Turnkey Construction",
+    details: `We manage the complete project, from engineering and design through to final handover.
+    We offer comprehensive solutions tailored to each client's needs, with a single point of contact
+    and complete peace of mind throughout the entire process.`,
+    href: "/servicios/construccion-llave-en-mano/",
+  },
+  {
+    image: image3,
+    title: "Industrial Area & Maintenance",
+    details: `Comprehensive industrial maintenance services, both preventive and corrective, for
+    facilities, machinery and steel structures. We minimise production downtime and ensure the
+    continuous operability of your installations.`,
+    href: "/servicios/area-industrial-y-mantenimiento/",
+  },
+  {
+    image: image4,
+    title: "Metalwork",
+    details: `Custom fabrication of metal elements: handrails, staircases, doors, enclosures and any
+    metal solution. We combine precision craftsmanship with quality finishes to meet the most
+    specific requirements of each project.`,
+    href: "/servicios/metalisteria/",
+  },
+  {
+    image: image5,
+    title: "Engineering & Consulting",
+    details: `Specialist technical consultancy in industrial engineering: structural studies, technical
+    inspections, site management and project consulting. We bring rigour and experience to
+    optimise every phase of your industrial project.`,
+    href: "/servicios/ingenieria-y-consultoria/",
+  },
+];
+
+const serviceData = isEn ? serviceDataEn : serviceDataEs;
 ---
 
 <section id="services-side-image" class="overflow-hidden pt-12 pb-10 md:pt-14 md:pb-10">
   <div class="site-container">
     <div class="mx-auto mb-16 text-center md:mb-20 md:max-w-4xl" data-mos="fade-up">
-      <Badge>Áreas de actividad</Badge>
-      <h2 class="h2 mb-4">Soluciones integrales de ingeniería y construcción</h2>
-      <p class="description text-lg md:text-xl">
-        Desde el diseño hasta la entrega, cubrimos todo el ciclo del proyecto industrial.
-        Experiencia, precisión y compromiso en cada obra.
-      </p>
+      {isEn ? (
+        <>
+          <Badge>Areas of activity</Badge>
+          <h2 class="h2 mb-4">Comprehensive engineering and construction solutions</h2>
+          <p class="description text-lg md:text-xl">
+            From design to handover, we cover the entire industrial project cycle.
+            Expertise, precision and commitment in every build.
+          </p>
+        </>
+      ) : (
+        <>
+          <Badge>Áreas de actividad</Badge>
+          <h2 class="h2 mb-4">Soluciones integrales de ingeniería y construcción</h2>
+          <p class="description text-lg md:text-xl">
+            Desde el diseño hasta la entrega, cubrimos todo el ciclo del proyecto industrial.
+            Experiencia, precisión y compromiso en cada obra.
+          </p>
+        </>
+      )}
     </div>
     <div class="flex flex-col gap-16 md:mt-16 md:gap-24">
       {

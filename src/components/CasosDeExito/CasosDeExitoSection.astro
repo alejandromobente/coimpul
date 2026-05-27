@@ -6,17 +6,39 @@ import { Image } from "astro:assets";
 import Badge from "@components/Badge/Badge.astro";
 import Button from "@components/Button/Button.astro";
 
-// data
-const allCasos = await getCollection("casosDeExito", ({ data }) => data.draft !== true);
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getLocalizedRoute } from "@js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const isEn = currLocale === "en";
+const casosHref = getLocalizedRoute(currLocale, "/casos-de-exito");
+
+// Strip locale prefix to get the clean slug for URLs
+const getSlug = (id: string) => id.replace(`${currLocale}/`, "");
+const getCasoHref = (id: string) => getLocalizedRoute(currLocale, `/casos-de-exito/${getSlug(id)}`);
+
+// data — filter by current locale (ids: "es/slug" or "en/slug")
+const allCasos = await getCollection(
+  "casosDeExito",
+  ({ id, data }) => id.startsWith(`${currLocale}/`) && data.draft !== true,
+);
 const casos = allCasos.sort((a, b) => a.data.title.localeCompare(b.data.title));
 const categories = [...new Set(casos.map((c) => c.data.category))].sort();
 
-const categoryLabels: Record<string, string> = {
-  industrial: "Industrial",
-  comercial: "Comercial",
-  infraestructuras: "Infraestructuras",
-  residencial: "Residencial",
-};
+const categoryLabels: Record<string, string> = isEn
+  ? {
+      industrial: "Industrial",
+      comercial: "Commercial",
+      infraestructuras: "Infrastructure",
+      residencial: "Residential",
+    }
+  : {
+      industrial: "Industrial",
+      comercial: "Comercial",
+      infraestructuras: "Infraestructuras",
+      residencial: "Residencial",
+    };
 
 const categoryGradients: Record<string, string> = {
   industrial: "from-orange-900 to-orange-700",
@@ -31,12 +53,25 @@ const categoryGradients: Record<string, string> = {
 
     <!-- Header -->
     <div class="mx-auto mb-10 text-center md:max-w-3xl" data-mos="fade-up">
-      <Badge>Casos de éxito</Badge>
-      <h2 class="h2 mb-4 mt-1">Proyectos que hablan por sí solos</h2>
-      <p class="description text-lg text-pretty md:text-xl">
-        Una selección de trabajos reales que reflejan nuestra experiencia,
-        rigor técnico y compromiso con cada cliente.
-      </p>
+      {isEn ? (
+        <>
+          <Badge>Success Stories</Badge>
+          <h2 class="h2 mb-4 mt-1">Projects that speak for themselves</h2>
+          <p class="description text-lg text-pretty md:text-xl">
+            A selection of real projects that reflect our expertise,
+            technical rigour and commitment to every client.
+          </p>
+        </>
+      ) : (
+        <>
+          <Badge>Casos de éxito</Badge>
+          <h2 class="h2 mb-4 mt-1">Proyectos que hablan por sí solos</h2>
+          <p class="description text-lg text-pretty md:text-xl">
+            Una selección de trabajos reales que reflejan nuestra experiencia,
+            rigor técnico y compromiso con cada cliente.
+          </p>
+        </>
+      )}
     </div>
 
     <!-- Filtros -->
@@ -45,7 +80,7 @@ const categoryGradients: Record<string, string> = {
         data-cfilter="todos"
         class="casos-filter-btn casos-filter-btn--active rounded-full border border-primary-500 bg-primary-500 px-5 py-2 text-sm font-medium text-white transition-all"
       >
-        Todos
+        {isEn ? "All" : "Todos"}
       </button>
       {
         categories.map((cat) => (
@@ -69,7 +104,7 @@ const categoryGradients: Record<string, string> = {
       {
         casos.map((caso) => (
           <a
-            href={`/casos-de-exito/${caso.id}`}
+            href={getCasoHref(caso.id)}
             data-ccat={caso.data.category}
             class="caso-home-card group relative overflow-hidden rounded-xl"
           >
@@ -108,8 +143,8 @@ const categoryGradients: Record<string, string> = {
 
     <!-- Ver todos -->
     <div class="mt-12 text-center" data-mos="fade-up" data-mos-delay=".2">
-      <Button variant="outline" href="/casos-de-exito" arrow="right">
-        Ver todos los proyectos
+      <Button variant="outline" href={casosHref} arrow="right">
+        {isEn ? "View all projects" : "Ver todos los proyectos"}
       </Button>
     </div>
 
